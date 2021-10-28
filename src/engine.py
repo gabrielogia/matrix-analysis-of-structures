@@ -1,4 +1,4 @@
-from data import Data
+from src.data import Data
 
 class Engine():
     def __init__(self) -> None:

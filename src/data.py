@@ -1,7 +1,7 @@
 import math
 import numpy as np
-from node import Node
-from bar import Bar
+from src.node import Node
+from src.bar import Bar
 
 class Data():
     def __init__(self) -> None:
@@ -10,7 +10,7 @@ class Data():
         self.K = [] #matriz de rigidez da estrutura no sistema global
 
     def readModel(self, filename):
-        with open(filename) as f:
+        with open('data/' + filename) as f:
             marker = None
 
             for line in f:
@@ -61,7 +61,7 @@ class Data():
                 for j in range(6):
                     self.K[bar.e[i] - 1][bar.e[j] - 1] = self.K[bar.e[i] - 1][bar.e[j] - 1] + bar.kg[i][j]
 
-        # for i in range(len(self.K)):
-        #     for j in range(len(self.K[i])):
-        #         print("%f   " %(self.K[i][j]), end="")
-        #     print('\n')
+        for i in range(len(self.K)):
+            for j in range(len(self.K[i])):
+                print("%f   " %(self.K[i][j]), end="")
+            print('\n')
