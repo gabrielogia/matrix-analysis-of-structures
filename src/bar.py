@@ -21,6 +21,8 @@ class Bar():
         self.kg = [] #matriz de rigidez da barra no sistema global
         self.e = [] #vetor de espaçamento
         self.R = [] #matriz de rotacao
+        self.fl = [0]*6 #vetor de forças nas coordenadas locais
+        self.fg = [0]*6 #vetor de forças nas coordenadas globais
 
     def setEVector(self, Ni, Nf):
         self.e = Ni.coordsGlobal + Nf.coordsGlobal
@@ -42,3 +44,10 @@ class Bar():
                             [0, 0, 0, self.cos, self.sin, 0], 
                             [0, 0, 0, -self.sin, self.cos, 0], 
                             [0, 0, 0, 0, 0, 1]])
+
+    def setLocalForces(self):
+        if (self.dirLoad == 'Global'):
+            self.fl = np.array([0, self.Qy*self.L/2, (self.Qy*self.L*self.L)/12, 0, self.Qy*self.L/2, -(self.Qy*self.L*self.L)/12])
+            self.fg = np.dot(self.R, self.fl)
+        else:
+            print(self.fl)

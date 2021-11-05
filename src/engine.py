@@ -1,13 +1,17 @@
 from src.data import Data
+from src.solver import Solver
 
 class Engine():
     def __init__(self) -> None:
         self.file = ''
-        self.Data = Data()
+        self.data = Data()
+        self.solver = Solver()
 
     def start(self, filename):
-        self.Data.readModel(filename)
-        self.Data.calculateBarLength()
-        self.Data.setLocalBarVariables()
-        self.Data.setStructureStiffnessMatrix()
+        self.data.readModel(filename)
+        self.data.calculateBarLength()
+        self.data.setLocalBarVariables()
+        self.data.setStructureStiffnessMatrix()
+        self.solver.solve(self.data)
+        
         #faltou fazer os vetores locais e global de forças
