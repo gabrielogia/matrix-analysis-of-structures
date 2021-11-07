@@ -9,9 +9,10 @@ class Engine():
 
     def start(self, filename):
         self.data.readModel(filename)
-        self.data.calculateBarLength()
-        self.data.setLocalBarVariables()
-        self.data.setStructureStiffnessMatrix()
-        self.solver.solve(self.data)
+        self.data.setGlobalCoordinates()
+        #RECOMEÇAR A PARTIR DAQUI
+        #self.data.setLocalBarVariables()
+        #self.data.setStructureStiffnessMatrix()
+        #self.solver.solve(self.data)
         
         #faltou fazer os vetores locais e global de forças

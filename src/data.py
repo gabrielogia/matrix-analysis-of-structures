@@ -5,6 +5,8 @@ from src.bar import Bar
 
 class Data():
     def __init__(self) -> None:
+        self.globalCoordinates = []
+        self.model = ""
         self.nodes = []
         self.bars = []
         self.K = [] #matriz de rigidez da estrutura no sistema global
@@ -15,7 +17,10 @@ class Data():
             marker = None
 
             for line in f:
-
+                if (line == "#MODEL\n"):
+                    marker = "MODEL"
+                    continue
+                
                 if (line == "#NODES\n"):
                     marker = "NODES"
                     continue
@@ -28,32 +33,60 @@ class Data():
                     marker = None
                     continue
 
+                if (marker == "MODEL"):
+                    self.model = line.split('\n')[0]
+
                 if (marker == "NODES"):
-                    string = line.split("   ")
+                    string = line.split(",")
                     string[len(string) - 1] = string[len(string) - 1].split('\n')[0]
                     
                     self.nodes.append(Node((string[0]), (string[1]), (string[2]), (string[3]), (string[4]), (string[5]), (string[6]), 
-                                        (string[7]), (string[8]), (string[9]), (string[10]), (string[11])))
+                                        (string[7]), (string[8]), (string[9]), (string[10]), (string[11]), self.model))
                     
                 if (marker == "BARS"):
-                    string = line.split("   ")
+                    string = line.split(",")
                     string[len(string) - 1] = string[len(string) - 1].split('\n')[0]
                     
                     self.bars.append(Bar((string[0]), (string[1]), (string[2]), (string[3]), (string[4]), (string[5]), (string[6]), 
-                                        (string[7]), (string[8]), (string[9]), (string[10])))
+                                        (string[7]), (string[8])))
 
-    def calculateBarLength(self):
+    def setGlobalCoordinates(self):
+        degreesFree = 0
+        degreesRestrained = 0
+
+        if (self.model == 'truss'):
+            self.globalCoordinates = [0]*(len(self.nodes)*2)
+        else:
+            self.globalCoordinates = [0]*(len(self.nodes)*2)
+
+        for i in range(0, len(self.nodes)):
+            f, r = self.nodes[i].countDegrees()
+            degreesFree += f
+            degreesRestrained += r
+
+        k = 1
+        for i in range(0, len(self.nodes)):
+            k = self.nodes[i].setFreeGlobalCoordinates(k)
+
+        k = 1 + degreesFree
+        for i in range(0, len(self.nodes)):
+            k = self.nodes[i].setRestrainedGlobalCoordinates(k)
+
+        for i in range(0, len(self.nodes)):
+            self.globalCoordinates[2*i] = self.nodes[i].coordsGlobal[0]
+            self.globalCoordinates[2*i+1] = self.nodes[i].coordsGlobal[1]
+
+        print(self.globalCoordinates)
+    
+    def setLocalBarVariables(self):
         for i in range(len(self.bars)):
             self.bars[i].L = math.sqrt((self.nodes[self.bars[i].Nf - 1].x - self.nodes[self.bars[i].Ni - 1].x)**2 + (self.nodes[self.bars[i].Nf - 1].y - self.nodes[self.bars[i].Ni - 1].y)**2)
             self.bars[i].cos = (self.nodes[self.bars[i].Nf - 1].x - self.nodes[self.bars[i].Ni - 1].x)/self.bars[i].L
             self.bars[i].sin = (self.nodes[self.bars[i].Nf - 1].y - self.nodes[self.bars[i].Ni - 1].y)/self.bars[i].L
-
-    def setLocalBarVariables(self):
-        for i in range(len(self.bars)):
             self.bars[i].setEVector(self.nodes[self.bars[i].Ni - 1], self.nodes[self.bars[i].Nf - 1])
-            self.bars[i].setRotationMatrix()
-            self.bars[i].setLocalStiffnessMatrix()
-            self.bars[i].setLocalForces()
+            #self.bars[i].setRotationMatrix()
+            #self.bars[i].setLocalStiffnessMatrix()
+            #self.bars[i].setLocalForces()
     
     def setStructureStiffnessMatrix(self):
         self.K = np.zeros((len(self.nodes)*3, len(self.nodes)*3))

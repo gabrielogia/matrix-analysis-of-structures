@@ -2,12 +2,10 @@ import numpy as np
 from numpy.core.fromnumeric import transpose
 
 class Bar():
-    def __init__(self, id, Ni, Nf, Ri, Rf, E, A, I, dirLoad, Qx, Qy) -> None:
+    def __init__(self, id, Ni, Nf, E, A, I, dirLoad, Qx, Qy) -> None:
         self.id = int(id)
         self.Ni = int(Ni)
         self.Nf = int(Nf)
-        self.Ri = int(Ri)
-        self.Rf = int(Rf)
         self.E = float(E)
         self.A = float(A)
         self.I = float(I)
@@ -48,6 +46,6 @@ class Bar():
     def setLocalForces(self):
         if (self.dirLoad == 'Global'):
             self.fl = np.array([0, self.Qy*self.L/2, (self.Qy*self.L*self.L)/12, 0, self.Qy*self.L/2, -(self.Qy*self.L*self.L)/12])
-            self.fg = np.dot(self.R, self.fl)
+            self.fg = np.dot(transpose(self.R), self.fl) #faltou utilizar a transposta de R
         else:
             print(self.fl)
