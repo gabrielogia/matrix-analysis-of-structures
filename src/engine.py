@@ -5,14 +5,14 @@ class Engine():
     def __init__(self) -> None:
         self.file = ''
         self.data = Data()
-        self.solver = Solver()
+        self.solver = Solver(self.data)
 
     def start(self, filename):
         self.data.readModel(filename)
         self.data.setGlobalCoordinates()
-        #RECOMEÇAR A PARTIR DAQUI
-        #self.data.setLocalBarVariables()
-        #self.data.setStructureStiffnessMatrix()
-        #self.solver.solve(self.data)
+        self.data.setGlobalForceVector()
+        self.data.setLocalBarVariables()
+        self.data.setStructureStiffnessMatrix()
+        self.solver.solve()
         
         #faltou fazer os vetores locais e global de forças

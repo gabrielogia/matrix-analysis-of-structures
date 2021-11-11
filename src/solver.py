@@ -1,68 +1,50 @@
 import numpy as np
+from numpy.core.fromnumeric import transpose
 
 class Solver():
-    def __init__(self) -> None:
-        self.Kll = []
-        self.Kfl = []
-        self.Fl = []
-        self.Ff = []
-        self.Dl = []
-        self.freeCoords = []
-        self.lockedCoords = []
+    def __init__(self, data) -> None:
+        self.d = []
+        self.data = data
 
-    def calculateFf(self):
-        self.Ff = np.dot(self.Kfl, self.Dl)
+    def setReactionsValues(self):
+        self.data.R = np.zeros((self.data.degreesRestrained))
 
-    def setKfl(self, data):
-        self.Kfl = np.zeros((len(self.lockedCoords), len(self.freeCoords)))
+        for i in range(len(self.data.bars)):
+            for j in range(len(self.data.bars[i].e)):
+                if (self.data.bars[i].e[j] > self.data.degreesFree):
+                    self.data.R[self.data.bars[i].e[j] - self.data.degreesFree - 1] = self.data.bars[i].q[j]
         
-        for i in range(0, len(self.lockedCoords)):
-            for j in range(0, len(self.freeCoords)):
-                self.Kfl[i][j] = data.K[self.lockedCoords[i] - 1][self.freeCoords[j] - 1]
+        print(self.data.R)
 
-    def calculateDl(self):
-        self.Dl = np.linalg.solve(self.Kll, self.Fl)
+    def calculateForcesGlobalCoordinateSystem(self):
+        for i in range(len(self.data.bars)):
+            self.data.bars[i].q =  np.dot(transpose(self.data.bars[i].R), self.data.bars[i].q)
 
-    def setFl(self, data):
-        self.Fl = np.zeros(len(self.freeCoords))
+    def calculateForcesLocalCoordinateSystem(self):
+        for i in range(len(self.data.bars)):
+            self.data.bars[i].q =  np.dot(self.data.bars[i].kl, self.data.bars[i].u)
 
-        for i in range(0, len(self.freeCoords)):
-            self.Fl[i] = data.F[self.freeCoords[i] - 1]
+    def calculateDiscplacementsGlobalCoordinateSystem(self):
+        for i in range(len(self.data.bars)):
+            self.data.bars[i].u = np.dot(self.data.bars[i].R, self.data.bars[i].v)
 
-    def setKll(self, data):
-        self.Kll = np.zeros((len(self.freeCoords), len(self.freeCoords)))
+    def calculateDiscplacementsLocalCoordinateSystem(self):
+        for i in range(len(self.data.bars)):
+            self.data.bars[i].v = np.zeros(len(self.data.bars[i].e))
+            for j in range(len(self.data.bars[i].e)):
+                if (self.data.bars[i].e[j] <= self.data.degreesFree):
+                    self.data.bars[i].v[j] = self.d[self.data.bars[i].e[j] - 1]
+
+    def calculateMembersForcesAndDisplacements(self):
+        self.calculateDiscplacementsLocalCoordinateSystem()
+        self.calculateDiscplacementsGlobalCoordinateSystem()
+        self.calculateForcesLocalCoordinateSystem()
+        self.calculateForcesGlobalCoordinateSystem()
+
+    def calculateNodalDisplacements(self):
+        self.d = np.linalg.solve(self.data.K, self.data.F)
         
-        for i in range(0, len(self.freeCoords)):
-            for j in range(0, len(self.freeCoords)):
-                self.Kll[i][j] = data.K[self.freeCoords[i] - 1][self.freeCoords[j] - 1]
-
-    def setDisplacementRestriction(self, data):
-        for i in range(len(data.nodes)):
-            if (data.nodes[i].supX == 1):
-                self.lockedCoords.append(data.nodes[i].coordsGlobal[0])
-            else:
-                self.freeCoords.append(data.nodes[i].coordsGlobal[0])
-
-            if (data.nodes[i].supY == 1):
-                self.lockedCoords.append(data.nodes[i].coordsGlobal[1])
-            else:
-                self.freeCoords.append(data.nodes[i].coordsGlobal[1])
-
-            if (data.nodes[i].supZ == 1):
-                self.lockedCoords.append(data.nodes[i].coordsGlobal[2])
-            else:
-                self.freeCoords.append(data.nodes[i].coordsGlobal[2])
-
-    def solve(self, data):
-        self.setDisplacementRestriction(data)
-        self.setKll(data)
-        self.setFl(data)
-        self.calculateDl()
-        self.setKfl(data)
-        self.calculateFf()
-
-        print(self.Kll)
-        print(self.Fl)
-        print(self.Dl)
-        print(self.Kfl)
-        print(self.Ff)
+    def solve(self):
+        self.calculateNodalDisplacements()
+        self.calculateMembersForcesAndDisplacements()
+        self.setReactionsValues()

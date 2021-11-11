@@ -6,11 +6,14 @@ from src.bar import Bar
 class Data():
     def __init__(self) -> None:
         self.globalCoordinates = []
+        self.degreesFree = 0
+        self.degreesRestrained = 0
         self.model = ""
         self.nodes = []
         self.bars = []
         self.K = [] #matriz de rigidez da estrutura no sistema global
         self.F = [] #vetor de forças no sistema global
+        self.R = [] #vetor de reações no sistema global
 
     def readModel(self, filename):
         with open('data/' + filename) as f:
@@ -57,7 +60,7 @@ class Data():
         if (self.model == 'truss'):
             self.globalCoordinates = [0]*(len(self.nodes)*2)
         else:
-            self.globalCoordinates = [0]*(len(self.nodes)*2)
+            self.globalCoordinates = [0]*(len(self.nodes)*3)
 
         for i in range(0, len(self.nodes)):
             f, r = self.nodes[i].countDegrees()
@@ -76,7 +79,18 @@ class Data():
             self.globalCoordinates[2*i] = self.nodes[i].coordsGlobal[0]
             self.globalCoordinates[2*i+1] = self.nodes[i].coordsGlobal[1]
 
-        print(self.globalCoordinates)
+        self.degreesFree = degreesFree
+        self.degreesRestrained = degreesRestrained
+
+    def setGlobalForceVector(self):
+        self.F = np.array([0]*self.degreesFree)
+        
+        for i in range(len(self.nodes)):
+            if (self.nodes[i].coordsGlobal[0] <= self.degreesFree):
+                self.F[self.nodes[i].coordsGlobal[0] - 1] = self.nodes[i].Fx
+
+            if (self.nodes[i].coordsGlobal[1] <= self.degreesFree):
+                self.F[self.nodes[i].coordsGlobal[1] - 1] = self.nodes[i].Fy
     
     def setLocalBarVariables(self):
         for i in range(len(self.bars)):
@@ -84,23 +98,19 @@ class Data():
             self.bars[i].cos = (self.nodes[self.bars[i].Nf - 1].x - self.nodes[self.bars[i].Ni - 1].x)/self.bars[i].L
             self.bars[i].sin = (self.nodes[self.bars[i].Nf - 1].y - self.nodes[self.bars[i].Ni - 1].y)/self.bars[i].L
             self.bars[i].setEVector(self.nodes[self.bars[i].Ni - 1], self.nodes[self.bars[i].Nf - 1])
-            #self.bars[i].setRotationMatrix()
-            #self.bars[i].setLocalStiffnessMatrix()
-            #self.bars[i].setLocalForces()
+            self.bars[i].setRotationMatrix()
+            self.bars[i].setLocalStiffnessMatrix()
     
     def setStructureStiffnessMatrix(self):
-        self.K = np.zeros((len(self.nodes)*3, len(self.nodes)*3))
-        self.F = np.zeros(len(self.nodes)*3)
+        self.K = np.zeros((self.degreesFree, self.degreesFree))
 
         for bar in self.bars:
-            for i in range(6):
-                self.F[bar.e[i] - 1] = self.F[bar.e[i] - 1] + bar.fg[i]
-                for j in range(6):
-                    self.K[bar.e[i] - 1][bar.e[j] - 1] = self.K[bar.e[i] - 1][bar.e[j] - 1] + bar.kg[i][j]
+            for i in range(len(bar.e)):
+                for j in range(len(bar.e)):
+                    if (bar.e[i] <= self.degreesFree and bar.e[j] <= self.degreesFree):
+                        self.K[bar.e[i] - 1][bar.e[j] - 1] = self.K[bar.e[i] - 1][bar.e[j] - 1] + bar.kg[i][j]
 
         # for i in range(len(self.K)):
         #     for j in range(len(self.K[i])):
         #         print("%.2f   " %(self.K[i][j]), end="")
         #     print('\n')
-        # print('forças')
-        # print(self.F)

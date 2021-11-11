@@ -19,29 +19,29 @@ class Bar():
         self.kg = [] #matriz de rigidez da barra no sistema global
         self.e = [] #vetor de espaçamento
         self.R = [] #matriz de rotacao
-        self.fl = [0]*6 #vetor de forças nas coordenadas locais
-        self.fg = [0]*6 #vetor de forças nas coordenadas globais
+        self.v = [] #deslocamento nas coordenadas globais
+        self.u = [] #deslocamento nas coordenadas locais
+        self.q = [] #forças no sistema de coordenadas local
+        self.f = [] #forças no sistema de coordenadas global
 
     def setEVector(self, Ni, Nf):
         self.e = Ni.coordsGlobal + Nf.coordsGlobal
+        #print(self.e)
 
     def setLocalStiffnessMatrix(self):
-        self.kl = np.array([[self.E*self.A/self.L, 0, 0, -self.E*self.A/self.L, 0, 0],
-                            [0, 12*self.E*self.I/(self.L**3), 6*self.E*self.I/(self.L**2), 0, -12*self.E*self.I/(self.L**3), 6*self.E*self.I/(self.L**2)],
-                            [0, 6*self.E*self.I/(self.L**2), 4*self.E*self.I/(self.L), 0, -6*self.E*self.I/(self.L**2), 2*self.E*self.I/(self.L)],
-                            [-self.E*self.A/self.L, 0, 0, self.E*self.A/self.L, 0, 0],
-                            [0, -12*self.E*self.I/(self.L**3), -6*self.E*self.I/(self.L**2), 0, 12*self.E*self.I/(self.L**3), -6*self.E*self.I/(self.L**2)],
-                            [0, 6*self.E*self.I/(self.L**2), 2*self.E*self.I/(self.L), 0, -6*self.E*self.I/(self.L**2), 4*self.E*self.I/(self.L)]])
+        self.kl = np.array([[self.E*self.A/self.L, 0, -self.E*self.A/self.L, 0],
+                            [0, 0, 0, 0],
+                            [-self.E*self.A/self.L, 0, self.E*self.A/self.L, 0],
+                            [0, 0, 0, 0]])
         
         self.kg = np.dot(np.dot(transpose(self.R), self.kl), self.R)
+        #print(self.kg)
     
     def setRotationMatrix(self):
-        self.R = np.array([[self.cos, self.sin, 0, 0, 0, 0], 
-                            [-self.sin, self.cos, 0, 0, 0, 0], 
-                            [0, 0, 1, 0, 0 ,0], 
-                            [0, 0, 0, self.cos, self.sin, 0], 
-                            [0, 0, 0, -self.sin, self.cos, 0], 
-                            [0, 0, 0, 0, 0, 1]])
+        self.R = np.array([[self.cos, self.sin, 0, 0],
+                            [-self.sin, self.cos, 0, 0], 
+                            [0, 0, self.cos, self.sin,], 
+                            [0, 0, -self.sin, self.cos,]])
 
     def setLocalForces(self):
         if (self.dirLoad == 'Global'):
