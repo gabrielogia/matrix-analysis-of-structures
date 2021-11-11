@@ -14,5 +14,3 @@ class Engine():
         self.data.setLocalBarVariables()
         self.data.setStructureStiffnessMatrix()
         self.solver.solve()
-        
-        #faltou fazer os vetores locais e global de forças
