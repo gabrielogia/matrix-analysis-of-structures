@@ -3,11 +3,9 @@ class Output():
         pass
 
     def printResults(self, data):
-        for i in range(len(data.nodes)):
-            if (data.nodes[i].coordsGlobal[0] > data.degreesFree):
-                print("Node: %i" %(data.nodes[i].id))
-                print(data.R[data.nodes[i].coordsGlobal[0] - 1 - data.degreesFree])
-
-            if (data.nodes[i].coordsGlobal[1] > data.degreesFree):
-                print("Node: %i" %(data.nodes[i].id))
-                print(data.R[data.nodes[i].coordsGlobal[1] - 1 - data.degreesFree])
+        for i in range(1, len(data.globalCoordinates), 2):
+            for j in range(0, len(data.bars)):
+                for k in range(1, len(data.bars[j].e), 2):
+                    if (data.bars[j].e[k-1] == data.globalCoordinates[i-1] and data.bars[j].e[k] == data.globalCoordinates[i]):
+                        print(int(i/2 + 1), data.globalCoordinates[i-1], data.globalCoordinates[i])
+                        break

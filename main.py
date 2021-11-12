@@ -1,5 +1,5 @@
 from src.engine import Engine
 
-filename = 'truss3.txt'
+filename = 'truss1.txt'
 simulation = Engine()
 simulation.start(filename)  
