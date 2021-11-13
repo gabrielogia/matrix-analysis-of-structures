@@ -12,11 +12,11 @@ class Solver():
         for i in range(len(self.data.bars)):
             for j in range(len(self.data.bars[i].e)):
                 if (self.data.bars[i].e[j] > self.data.degreesFree):
-                    self.data.R[self.data.bars[i].e[j] - self.data.degreesFree - 1] += self.data.bars[i].q[j]
+                    self.data.R[self.data.bars[i].e[j] - self.data.degreesFree - 1] += self.data.bars[i].f[j]
 
     def calculateForcesGlobalCoordinateSystem(self):
         for i in range(len(self.data.bars)):
-            self.data.bars[i].q =  np.dot(transpose(self.data.bars[i].R), self.data.bars[i].q)
+            self.data.bars[i].f =  np.dot(transpose(self.data.bars[i].R), self.data.bars[i].q)
 
     def calculateForcesLocalCoordinateSystem(self):
         for i in range(len(self.data.bars)):
