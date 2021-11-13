@@ -53,9 +53,9 @@ class Output():
                             if (data.bars[j].e[k-1] - data.degreesFree - 1 < 0):
                                 print("0.0000", end="")
                                 print(" "*9, end="") 
-                                print("%.3f" %(data.R[data.bars[j].e[k] - data.degreesFree - 1]))
+                                print("%.5f" %(data.R[data.bars[j].e[k] - data.degreesFree - 1]))
                             elif (data.bars[j].e[k] - data.degreesFree - 1 < 0):
-                                print("%.3f" %(data.R[data.bars[j].e[k-1] - data.degreesFree - 1])) 
+                                print("%.5f" %(data.R[data.bars[j].e[k-1] - data.degreesFree - 1])) 
                                 print(" "*9, end="")
                                 print("0.0000")
                             else:
@@ -119,10 +119,10 @@ class Output():
                 for k in range(1, len(data.bars[j].e), 2):
                     if (data.bars[j].e[k-1] == data.globalCoordinates[i-1] and data.bars[j].e[k] == data.globalCoordinates[i]):
                         print("    %i    " %(int(i/2 + 1)), end="")
-                        print(" "*9, end="")
-                        print("%.3f" %(data.bars[j].v[k-1]), end="")
-                        print(" "*10, end="")
-                        print("%.3f" %(data.bars[j].v[k]))
+                        print(" "*7, end="")
+                        print("%.6f" %(data.bars[j].v[k-1]), end="")
+                        print(" "*8, end="")
+                        print("%.6f" %(data.bars[j].v[k]))
                         found = True
                         break
                 
