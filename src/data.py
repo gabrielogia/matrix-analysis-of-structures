@@ -14,8 +14,11 @@ class Data():
         self.K = [] #matriz de rigidez da estrutura no sistema global
         self.F = [] #vetor de forças no sistema global
         self.R = [] #vetor de reações no sistema global
+        self.filename = ""
 
     def readModel(self, filename):
+        self.filename = filename
+        
         with open('data/' + filename) as f:
             marker = None
 
@@ -109,8 +112,3 @@ class Data():
                 for j in range(len(bar.e)):
                     if (bar.e[i] <= self.degreesFree and bar.e[j] <= self.degreesFree):
                         self.K[bar.e[i] - 1][bar.e[j] - 1] = self.K[bar.e[i] - 1][bar.e[j] - 1] + bar.kg[i][j]
-
-        # for i in range(len(self.K)):
-        #     for j in range(len(self.K[i])):
-        #         print("%.2f   " %(self.K[i][j]), end="")
-        #     print('\n')
