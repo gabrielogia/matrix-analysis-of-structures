@@ -26,26 +26,17 @@ class Bar():
 
     def setEVector(self, Ni, Nf):
         self.e = Ni.coordsGlobal + Nf.coordsGlobal
-        #print(self.e)
 
     def setLocalStiffnessMatrix(self):
-        self.kl = np.array([[self.E*self.A/self.L, 0, -self.E*self.A/self.L, 0],
+        self.kl = np.array([[(self.E*self.A)/self.L, 0, -(self.E*self.A)/self.L, 0],
                             [0, 0, 0, 0],
-                            [-self.E*self.A/self.L, 0, self.E*self.A/self.L, 0],
+                            [-(self.E*self.A)/self.L, 0, (self.E*self.A)/self.L, 0],
                             [0, 0, 0, 0]])
         
         self.kg = np.dot(np.dot(transpose(self.R), self.kl), self.R)
-        #print(self.kg)
     
     def setRotationMatrix(self):
         self.R = np.array([[self.cos, self.sin, 0, 0],
                             [-self.sin, self.cos, 0, 0], 
                             [0, 0, self.cos, self.sin,], 
                             [0, 0, -self.sin, self.cos,]])
-
-    def setLocalForces(self):
-        if (self.dirLoad == 'Global'):
-            self.fl = np.array([0, self.Qy*self.L/2, (self.Qy*self.L*self.L)/12, 0, self.Qy*self.L/2, -(self.Qy*self.L*self.L)/12])
-            self.fg = np.dot(transpose(self.R), self.fl) #faltou utilizar a transposta de R
-        else:
-            print(self.fl)
