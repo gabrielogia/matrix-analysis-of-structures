@@ -22,11 +22,11 @@ class Solver():
         for i in range(len(self.data.bars)):
             self.data.bars[i].q =  np.dot(self.data.bars[i].kl, self.data.bars[i].u)
 
-    def calculateDiscplacementsGlobalCoordinateSystem(self):
+    def calculateDiscplacementsLocalCoordinateSystem(self):
         for i in range(len(self.data.bars)):
             self.data.bars[i].u = np.dot(self.data.bars[i].R, self.data.bars[i].v)
 
-    def calculateDiscplacementsLocalCoordinateSystem(self):
+    def calculateDiscplacementsGlobalCoordinateSystem(self):
         for i in range(len(self.data.bars)):
             self.data.bars[i].v = np.zeros(len(self.data.bars[i].e))
             for j in range(len(self.data.bars[i].e)):
@@ -34,8 +34,8 @@ class Solver():
                     self.data.bars[i].v[j] = self.d[self.data.bars[i].e[j] - 1]
 
     def calculateMembersForcesAndDisplacements(self):
-        self.calculateDiscplacementsLocalCoordinateSystem()
         self.calculateDiscplacementsGlobalCoordinateSystem()
+        self.calculateDiscplacementsLocalCoordinateSystem()
         self.calculateForcesLocalCoordinateSystem()
         self.calculateForcesGlobalCoordinateSystem()
 
