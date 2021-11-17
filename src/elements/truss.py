@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.core.fromnumeric import transpose
 
-class Bar():
+class TrussElement():
     def __init__(self, id, Ni, Nf, E, A, I, dirLoad, Qx, Qy) -> None:
         self.id = int(id)
         self.Ni = int(Ni)
