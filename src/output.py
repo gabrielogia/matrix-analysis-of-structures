@@ -52,15 +52,15 @@ class Output():
                             print(" "*8, end="")
                             if (data.elem[j].e[k-1] - data.degreesFree - 1 < 0):
                                 print("0.0000", end="")
-                                print(" "*9, end="") 
+                                print(" "*7, end="") 
                                 print("%.5f" %(data.R[data.elem[j].e[k] - data.degreesFree - 1]))
                             elif (data.elem[j].e[k] - data.degreesFree - 1 < 0):
                                 print("%.5f" %(data.R[data.elem[j].e[k-1] - data.degreesFree - 1])) 
-                                print(" "*9, end="")
+                                print(" "*7, end="")
                                 print("0.0000")
                             else:
                                 print("%.3f" %(data.R[data.elem[j].e[k-1] - data.degreesFree - 1]), end="") 
-                                print(" "*9, end="") 
+                                print(" "*7, end="") 
                                 print("%.3f" %(data.R[data.elem[j].e[k] - data.degreesFree - 1])) 
                             found = True
                             break
