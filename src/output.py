@@ -44,31 +44,31 @@ class Output():
         
         for i in range(1, len(data.globalCoordinates), 2):
             if (data.globalCoordinates[i] > data.degreesFree):
-                for j in range(0, len(data.bars)):
+                for j in range(0, len(data.elem)):
                     found = False
-                    for k in range(1, len(data.bars[j].e), 2):
-                        if (data.bars[j].e[k-1] == data.globalCoordinates[i-1] and data.bars[j].e[k] == data.globalCoordinates[i]):
+                    for k in range(1, len(data.elem[j].e), 2):
+                        if (data.elem[j].e[k-1] == data.globalCoordinates[i-1] and data.elem[j].e[k] == data.globalCoordinates[i]):
                             print("    %i    " %(int(i/2 + 1)), end="")
                             print(" "*8, end="")
-                            if (data.bars[j].e[k-1] - data.degreesFree - 1 < 0):
+                            if (data.elem[j].e[k-1] - data.degreesFree - 1 < 0):
                                 print("0.0000", end="")
                                 print(" "*9, end="") 
-                                print("%.5f" %(data.R[data.bars[j].e[k] - data.degreesFree - 1]))
-                            elif (data.bars[j].e[k] - data.degreesFree - 1 < 0):
-                                print("%.5f" %(data.R[data.bars[j].e[k-1] - data.degreesFree - 1])) 
+                                print("%.5f" %(data.R[data.elem[j].e[k] - data.degreesFree - 1]))
+                            elif (data.elem[j].e[k] - data.degreesFree - 1 < 0):
+                                print("%.5f" %(data.R[data.elem[j].e[k-1] - data.degreesFree - 1])) 
                                 print(" "*9, end="")
                                 print("0.0000")
                             else:
-                                print("%.3f" %(data.R[data.bars[j].e[k-1] - data.degreesFree - 1]), end="") 
+                                print("%.3f" %(data.R[data.elem[j].e[k-1] - data.degreesFree - 1]), end="") 
                                 print(" "*9, end="") 
-                                print("%.3f" %(data.R[data.bars[j].e[k] - data.degreesFree - 1])) 
+                                print("%.3f" %(data.R[data.elem[j].e[k] - data.degreesFree - 1])) 
                             found = True
                             break
                     
                     if (found):
                         break
                     
-    def printBarsForces(self, data):
+    def printelemForces(self, data):
         print("")
         print(" "*10, end="")
         print("- Member Axial Forces -", end="")
@@ -84,17 +84,17 @@ class Output():
         print(" "*6, end="")
         print("-----------")
         
-        for i in range(0, len(data.bars)):
+        for i in range(0, len(data.elem)):
             if(i < 9):
                 print(" "*12, end="")
             else:
                 print(" "*11, end="")
-            print("%i" %data.bars[i].id, end="")
+            print("%i" %data.elem[i].id, end="")
             print(" "*10, end="")
-            if (data.bars[i].q[0] < 0):
-                print("%.3f (T)" %(abs(data.bars[i].q[0])))
+            if (data.elem[i].q[0] < 0):
+                print("%.3f (T)" %(abs(data.elem[i].q[0])))
             else:
-                print("%.3f (C)" %(abs(data.bars[i].q[0])))
+                print("%.3f (C)" %(abs(data.elem[i].q[0])))
     
     def printDisplacements(self, data):
         print(" "*10, end="")
@@ -114,15 +114,15 @@ class Output():
         print("-------------")
         
         for i in range(1, len(data.globalCoordinates), 2):
-            for j in range(0, len(data.bars)):
+            for j in range(0, len(data.elem)):
                 found = False
-                for k in range(1, len(data.bars[j].e), 2):
-                    if (data.bars[j].e[k-1] == data.globalCoordinates[i-1] and data.bars[j].e[k] == data.globalCoordinates[i]):
+                for k in range(1, len(data.elem[j].e), 2):
+                    if (data.elem[j].e[k-1] == data.globalCoordinates[i-1] and data.elem[j].e[k] == data.globalCoordinates[i]):
                         print("    %i    " %(int(i/2 + 1)), end="")
                         print(" "*7, end="")
-                        print("%.6f" %(data.bars[j].v[k-1]), end="")
+                        print("%.6f" %(data.elem[j].v[k-1]), end="")
                         print(" "*8, end="")
-                        print("%.6f" %(data.bars[j].v[k]))
+                        print("%.6f" %(data.elem[j].v[k]))
                         found = True
                         break
                 
@@ -137,6 +137,6 @@ class Output():
         
         self.printInit()
         self.printDisplacements(data)
-        self.printBarsForces(data)
+        self.printelemForces(data)
         self.printSupportReactions(data)
         self.printEnd()

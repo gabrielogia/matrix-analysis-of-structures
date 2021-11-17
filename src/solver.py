@@ -9,29 +9,29 @@ class Solver():
     def setReactionsValues(self):
         self.data.R = np.zeros((self.data.degreesRestrained))
 
-        for i in range(len(self.data.bars)):
-            for j in range(len(self.data.bars[i].e)):
-                if (self.data.bars[i].e[j] > self.data.degreesFree):
-                    self.data.R[self.data.bars[i].e[j] - self.data.degreesFree - 1] += self.data.bars[i].f[j]
+        for i in range(len(self.data.elem)):
+            for j in range(len(self.data.elem[i].e)):
+                if (self.data.elem[i].e[j] > self.data.degreesFree):
+                    self.data.R[self.data.elem[i].e[j] - self.data.degreesFree - 1] += self.data.elem[i].f[j]
 
     def calculateForcesGlobalCoordinateSystem(self):
-        for i in range(len(self.data.bars)):
-            self.data.bars[i].f =  np.dot(transpose(self.data.bars[i].R), self.data.bars[i].q)
+        for i in range(len(self.data.elem)):
+            self.data.elem[i].f =  np.dot(transpose(self.data.elem[i].R), self.data.elem[i].q)
 
     def calculateForcesLocalCoordinateSystem(self):
-        for i in range(len(self.data.bars)):
-            self.data.bars[i].q =  np.dot(self.data.bars[i].kl, self.data.bars[i].u)
+        for i in range(len(self.data.elem)):
+            self.data.elem[i].q =  np.dot(self.data.elem[i].kl, self.data.elem[i].u)
 
     def calculateDiscplacementsLocalCoordinateSystem(self):
-        for i in range(len(self.data.bars)):
-            self.data.bars[i].u = np.dot(self.data.bars[i].R, self.data.bars[i].v)
+        for i in range(len(self.data.elem)):
+            self.data.elem[i].u = np.dot(self.data.elem[i].R, self.data.elem[i].v)
 
     def calculateDiscplacementsGlobalCoordinateSystem(self):
-        for i in range(len(self.data.bars)):
-            self.data.bars[i].v = np.zeros(len(self.data.bars[i].e))
-            for j in range(len(self.data.bars[i].e)):
-                if (self.data.bars[i].e[j] <= self.data.degreesFree):
-                    self.data.bars[i].v[j] = self.d[self.data.bars[i].e[j] - 1]
+        for i in range(len(self.data.elem)):
+            self.data.elem[i].v = np.zeros(len(self.data.elem[i].e))
+            for j in range(len(self.data.elem[i].e)):
+                if (self.data.elem[i].e[j] <= self.data.degreesFree):
+                    self.data.elem[i].v[j] = self.d[self.data.elem[i].e[j] - 1]
 
     def calculateMembersForcesAndDisplacements(self):
         self.calculateDiscplacementsGlobalCoordinateSystem()
