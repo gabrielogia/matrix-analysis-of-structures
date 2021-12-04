@@ -130,9 +130,9 @@ class Output():
                     break
 
     def printResults(self, data):
-        Path("output/").mkdir(parents=True, exist_ok=True)
+        Path("bin/output/").mkdir(parents=True, exist_ok=True)
         
-        file_path = 'output/results_' + data.filename
+        file_path = 'bin/output/results_' + data.filename
         sys.stdout = open(file_path, "w")
         
         self.printInit()

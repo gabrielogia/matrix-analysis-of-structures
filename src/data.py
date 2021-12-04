@@ -19,7 +19,7 @@ class Data():
     def readModel(self, filename):
         self.filename = filename
         
-        with open('data/' + filename) as f:
+        with open('bin/data/' + filename) as f:
             marker = None
 
             for line in f:
