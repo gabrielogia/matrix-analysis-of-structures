@@ -21,6 +21,9 @@ class Solver():
     def calculateForcesLocalCoordinateSystem(self):
         for i in range(len(self.data.elem)):
             self.data.elem[i].q =  np.dot(self.data.elem[i].kl, self.data.elem[i].u)
+            
+            if (self.data.model == 'frame'):
+                self.data.elem[i].q += self.data.elem[i].qf
 
     def calculateDiscplacementsLocalCoordinateSystem(self):
         for i in range(len(self.data.elem)):
@@ -45,7 +48,7 @@ class Solver():
         for i in range(len(self.data.elem)):
             for j in range(len(self.data.elem[i].e)):
                 if (self.data.elem[i].e[j] <= self.data.degreesFree):
-                    Ff[self.data.elem[i].e[j] - 1] += self.data.elem[i].qf[j]
+                    Ff[self.data.elem[i].e[j] - 1] += self.data.elem[i].qfg[j]
                     
         return Ff
 
