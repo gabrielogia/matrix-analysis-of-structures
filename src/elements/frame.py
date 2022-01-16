@@ -22,7 +22,8 @@ class FrameElement():
         self.v = [] #deslocamento nas coordenadas globais
         self.u = [] #deslocamento nas coordenadas locais
         self.q = [] #forças no sistema de coordenadas local
-        self.qf = [] #forças distribuidas convertidas para nodais no sistema de coordenadas
+        self.qf = [] #forças distribuidas convertidas para nodais no sistema de coordenadas local
+        self.qfg = [] #forças distribuidas convertidas para nodais no sistema de coordenadas global
         self.f = [] #forças no sistema de coordenadas global
 
     def setEVector(self, Ni, Nf):
@@ -47,7 +48,7 @@ class FrameElement():
                             [0, 0, 0, 0, 0, 1]])
     
     def setFixedEndForceVector(self):
-        self.qf = np.array([self.Qx*self.L/2, self.Qy*self.L/2, (self.Qy*self.L**2)/12, self.Qx*self.L/2, self.Qy*self.L/2, -(self.Qy*self.L**2)/12])
+        self.qf = np.array([-self.Qx*self.L/2, -self.Qy*self.L/2, (-self.Qy*self.L**2)/12, -self.Qx*self.L/2, -self.Qy*self.L/2, (self.Qy*self.L**2)/12])
         
         if (self.dirLoad == 'local'):
-            self.qf = np.dot(transpose(self.R), self.qf)
+            self.qfg = np.dot(transpose(self.R), self.qf)
