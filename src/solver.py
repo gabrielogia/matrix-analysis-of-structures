@@ -38,8 +38,22 @@ class Solver():
         self.calculateDiscplacementsLocalCoordinateSystem()
         self.calculateForcesLocalCoordinateSystem()
         self.calculateForcesGlobalCoordinateSystem()
+        
+    def setStructureFixedJointForceVector(self):
+        Ff = np.array([0]*self.data.degreesFree, dtype=float)
+        
+        for i in range(len(self.data.elem)):
+            for j in range(len(self.data.elem[i].e)):
+                if (self.data.elem[i].e[j] <= self.data.degreesFree):
+                    Ff[self.data.elem[i].e[j] - 1] += self.data.elem[i].qf[j]
+                    
+        return Ff
 
     def calculateNodalDisplacements(self):
+        if (self.data.model == 'frame'):
+            Ff = self.setStructureFixedJointForceVector()
+            self.data.F = self.data.F - Ff
+        
         self.d = np.linalg.solve(self.data.K, self.data.F)
         
     def solve(self):
