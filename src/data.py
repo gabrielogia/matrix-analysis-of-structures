@@ -103,9 +103,10 @@ class Data():
 
             if (self.nodes[i].coordsGlobal[1] <= self.degreesFree):
                 self.F[self.nodes[i].coordsGlobal[1] - 1] = self.nodes[i].Fy
-                
-            if (self.nodes[i].coordsGlobal[2] <= self.degreesFree):
-                self.F[self.nodes[i].coordsGlobal[2] - 1] = self.nodes[i].Fz
+            
+            if (self.model == 'frame'):    
+                if (self.nodes[i].coordsGlobal[2] <= self.degreesFree):
+                    self.F[self.nodes[i].coordsGlobal[2] - 1] = self.nodes[i].Fz
     
     def setLocalBarVariables(self):
         for i in range(len(self.elem)):
