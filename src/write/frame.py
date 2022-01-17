@@ -24,9 +24,9 @@ class WriteFrame():
         
         print("Node No.", end="")
         print(" "*4, end="")
-        print("X Translation [m]", end="")
+        print("X Translation [mm]", end="")
         print(" "*4, end="")
-        print("Y Translation [m]", end="")
+        print("Y Translation [mm]", end="")
         print(" "*4, end="")
         print("Rotation [rad]")
         
@@ -34,9 +34,9 @@ class WriteFrame():
         print(" "*4, end="")
         print("-----------------", end="")
         print(" "*4, end="")
-        print("-----------------", end="")
-        print(" "*4, end="")
-        print("--------------")
+        print("------------------", end="")
+        print(" "*5, end="")
+        print("-------------")
         
         for i in range(0, len(data.nodes)):
             for j in range(0, len(data.elem)):
@@ -149,7 +149,7 @@ class WriteFrame():
             print(" "*13, end="")
         else:
             print(" "*12, end="")
-        print("%.3f" %(elem.q[2]))
+        print("%.3f" %(-elem.q[2]))
         
         print(" "*9, end="")
         print("%i" %(elem.Nf), end="")
