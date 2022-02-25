@@ -14,6 +14,7 @@ class Data():
         self.nodes = []
         self.elem = []
         self.K = [] #matriz de rigidez da estrutura no sistema global
+        self.M = [] #matriz de massa da estrutura no sistema global
         self.F = [] #vetor de forças no sistema global
         self.R = [] #vetor de reações no sistema global
         self.filename = ""
@@ -130,6 +131,12 @@ class Data():
             
             if (self.model == 'frame'):
                 self.elem[i].setFixedEndForceVector()
+                
+    def setStructureMatrices(self):
+        self.setStructureStiffnessMatrix()
+        
+        if (self.analysisType == 'dynamic'):
+            self.setStructureMassMatrix()
     
     def setStructureStiffnessMatrix(self):
         self.K = np.zeros((self.degreesFree, self.degreesFree))
@@ -139,3 +146,12 @@ class Data():
                 for j in range(len(bar.e)):
                     if (bar.e[i] <= self.degreesFree and bar.e[j] <= self.degreesFree):
                         self.K[bar.e[i] - 1][bar.e[j] - 1] = self.K[bar.e[i] - 1][bar.e[j] - 1] + bar.kg[i][j]
+    
+    def setStructureMassMatrix(self):
+        self.M = np.zeros((self.degreesFree, self.degreesFree))
+
+        for bar in self.elem:
+            for i in range(len(bar.e)):
+                for j in range(len(bar.e)):
+                    if (bar.e[i] <= self.degreesFree and bar.e[j] <= self.degreesFree):
+                        self.M[bar.e[i] - 1][bar.e[j] - 1] = self.M[bar.e[i] - 1][bar.e[j] - 1] + bar.mg[i][j]
