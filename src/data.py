@@ -125,6 +125,9 @@ class Data():
             self.elem[i].setRotationMatrix()
             self.elem[i].setLocalStiffnessMatrix()
             
+            if (self.analysisType == 'dynamic'):
+                self.elem[i].setLocalMassMatrix()
+            
             if (self.model == 'frame'):
                 self.elem[i].setFixedEndForceVector()
     
