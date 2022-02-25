@@ -10,6 +10,7 @@ class Data():
         self.degreesFree = 0
         self.degreesRestrained = 0
         self.model = ""
+        self.analysisType = ""
         self.nodes = []
         self.elem = []
         self.K = [] #matriz de rigidez da estrutura no sistema global
@@ -28,6 +29,10 @@ class Data():
                     marker = "MODEL"
                     continue
                 
+                if (line == "#TYPE\n"):
+                    marker = "TYPE"
+                    continue
+                
                 if (line == "#NODES\n"):
                     marker = "NODES"
                     continue
@@ -42,6 +47,9 @@ class Data():
 
                 if (marker == "MODEL"):
                     self.model = line.split('\n')[0]
+                    
+                if (marker == "TYPE"):
+                    self.analysisType = line.split('\n')[0]
 
                 if (marker == "NODES"):
                     string = line.split(",")
