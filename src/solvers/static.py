@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.core.fromnumeric import transpose
 
-class Solver():
+class StaticSolver():
     def __init__(self, data) -> None:
         self.d = []
         self.data = data
@@ -56,7 +56,7 @@ class Solver():
         if (self.data.model == 'frame'):
             Ff = self.setStructureFixedJointForceVector()
             self.data.F = self.data.F - Ff
-        
+                    
         self.d = np.linalg.solve(self.data.K, self.data.F)
         
     def solve(self):
