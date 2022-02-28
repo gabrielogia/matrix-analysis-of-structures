@@ -82,11 +82,11 @@ class Data():
                     
                     if (self.model == 'truss'):
                         self.elem.append(TrussElement((string[0]), (string[1]), (string[2]), (string[3]), (string[4]), (string[5]), (string[6]), 
-                                        (string[7]), (string[8])))
+                                        (string[7]), (string[8]), string[9]))
                                     
                     elif (self.model == 'frame'):
                         self.elem.append(FrameElement((string[0]), (string[1]), (string[2]), (string[3]), (string[4]), (string[5]), (string[6]), 
-                                        (string[7]), (string[8])))
+                                        (string[7]), (string[8]), string[9]))
 
                     elif (self.model == 'grid'):
                         pass
