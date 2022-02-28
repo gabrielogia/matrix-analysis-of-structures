@@ -18,6 +18,8 @@ class Data():
         self.F = [] #vetor de forças no sistema global
         self.R = [] #vetor de reações no sistema global
         self.filename = ""
+        self.t = []
+        self.dt = 0
 
     def readModel(self, filename):
         self.filename = filename
@@ -32,6 +34,14 @@ class Data():
                 
                 if (line == "#TYPE\n"):
                     marker = "TYPE"
+                    continue
+                
+                if (line == "#DELTATIME\n"):
+                    marker = "DELTATIME"
+                    continue
+                
+                if (line == "#TIME\n"):
+                    marker = "TIME"
                     continue
                 
                 if (line == "#NODES\n"):
@@ -51,6 +61,13 @@ class Data():
                     
                 if (marker == "TYPE"):
                     self.analysisType = line.split('\n')[0]
+                    
+                if (marker == "DELTATIME"):
+                    self.dt = float(line.split('\n')[0])
+                    
+                if (marker == "TIME"):
+                    aux = float(line.split('\n')[0])
+                    self.t = np.linspace(0, aux, int(aux/self.dt))
 
                 if (marker == "NODES"):
                     string = line.split(",")
