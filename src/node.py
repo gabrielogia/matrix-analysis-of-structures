@@ -12,6 +12,7 @@ class Node():
         self.Fx = float(Fx)  
         self.Fy = float(Fy)  
         self.Fz = float(Fz)
+        self.model = model
 
         if (model == 'truss'):
             self.coordsGlobal = 2*[0]
@@ -32,10 +33,11 @@ class Node():
         else:
             r += 1
 
-        if (self.supZ == 0):
-            f += 1
-        elif (self.supZ == 1):
-            r += 1
+        if (self.model == 'frame'):
+            if (self.supZ == 0):
+                f += 1
+            elif (self.supZ == 1):
+                r += 1
 
         return f, r
 
@@ -48,9 +50,10 @@ class Node():
             self.coordsGlobal[1] = k
             k += 1
 
-        if (self.supZ == 0):
-            self.coordsGlobal[2] = k
-            k += 1
+        if (self.model == 'frame'):
+            if (self.supZ == 0):
+                self.coordsGlobal[2] = k
+                k += 1
 
         return k
 
