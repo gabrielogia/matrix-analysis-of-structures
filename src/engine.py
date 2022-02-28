@@ -1,19 +1,27 @@
 from src.data import Data
-from src.solver import Solver
+from src.solvers.static import StaticSolver
+from src.solvers.dynamic import DynamicSolver
 from src.output import Output
 
 class Engine():
     def __init__(self) -> None:
         self.file = ''
         self.data = Data()
-        self.solver = Solver(self.data)
+        self.solver = ''
         self.output = Output()
 
     def start(self, filename):
         self.data.readModel(filename)
         self.data.setGlobalCoordinates()
-        self.data.setGlobalForceVector()
         self.data.setLocalBarVariables()
-        self.data.setStructureStiffnessMatrix()
-        self.solver.solve()
-        self.output.printResults(self.data)
+        self.data.setStructureMatrices()
+        self.data.setGlobalForceVector()
+        
+        if (self.data.analysisType != 'dynamic'):
+            self.solver = StaticSolver(self.data)
+            
+        else:
+            self.solver = DynamicSolver(self.data)
+            
+        self.solver.solve()        
+        #self.output.printResults(self.data)
