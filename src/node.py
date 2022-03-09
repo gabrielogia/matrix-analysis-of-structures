@@ -50,7 +50,7 @@ class Node():
             self.coordsGlobal[1] = k
             k += 1
 
-        if (self.model == 'frame'):
+        if (self.model != 'truss'):
             if (self.supZ == 0):
                 self.coordsGlobal[2] = k
                 k += 1
@@ -66,8 +66,9 @@ class Node():
             self.coordsGlobal[1] = k
             k += 1
 
-        if (self.supZ == 1):
-            self.coordsGlobal[2] = k
-            k += 1
+        if (self.model != 'truss'):
+            if (self.supZ == 1):
+                self.coordsGlobal[2] = k
+                k += 1
 
         return k
