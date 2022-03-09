@@ -1,5 +1,5 @@
 from src.engine import Engine
 
-filename = 'truss5.txt'
+filename = 'dynamic/frame4.txt'
 simulation = Engine()
-simulation.start(filename)
+simulation.start(filename)  
