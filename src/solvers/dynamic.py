@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-from scipy.linalg import eigh
+from scipy.linalg import eigh, eig
 from scipy.integrate import solve_ivp
 from numpy.core.fromnumeric import transpose
 
@@ -35,12 +35,7 @@ class DynamicSolver():
 
     def sod2(self, t, u, P, omega, zeta):
         #excitation function
-        if (t <= 0.25):
-            F = P
-        elif (t < 0.5):
-            F = 2*P*(1-2*t)
-        else:
-            F = 0
+        F = P
 
         return [u[1], -omega*omega*u[0] - 2*zeta*omega*u[1] + F]
     
@@ -87,8 +82,8 @@ class DynamicSolver():
         
     def setNaturalFrequencies(self):
         for i in range(len(self.w)):
-            self.omegas.append(math.sqrt(self.w[i]))
-
+            self.omegas.append(math.sqrt(self.w[i])/(2*math.pi))
+                  
     def solveEigenvalueProblem(self):
         self.w, self.v = eigh(self.data.K, self.data.M)
         
