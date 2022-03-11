@@ -1,5 +1,5 @@
 from src.engine import Engine
 
-filename = 'dynamic/tower.txt'
+filename = 'dynamic/validated/tower.txt'
 simulation = Engine()
-simulation.start(filename)  
+simulation.start(filename)
