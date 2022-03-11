@@ -1,5 +1,5 @@
 from src.engine import Engine
 
-filename = 'dynamic/frame4.txt'
+filename = 'dynamic/tower.txt'
 simulation = Engine()
 simulation.start(filename)  
