@@ -5,4 +5,4 @@ readme.txt
 *.h5
 *.csv
 *.ipynb
-*/ipynb_checkpoints
+*\.ipynb_checkpoints
