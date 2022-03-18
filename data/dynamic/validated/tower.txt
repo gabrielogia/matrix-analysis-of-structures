@@ -1,4 +1,4 @@
-#MODEL,2.1e11,3.1414e-2,7.8529e-5,7850,local,0,0
+#MODEL
 truss
 
 #TYPE
