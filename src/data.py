@@ -134,12 +134,17 @@ class Data():
                 if (self.nodes[i].coordsGlobal[2] <= self.degreesFree):
                     self.F[self.nodes[i].coordsGlobal[2] - 1] = self.nodes[i].Fz
     
-    def setLocalBarVariables(self):
+    def setLocalBarVariables(self, k, damage):
         for i in range(len(self.elem)):
             self.elem[i].L = math.sqrt((self.nodes[self.elem[i].Nf - 1].x - self.nodes[self.elem[i].Ni - 1].x)**2 + (self.nodes[self.elem[i].Nf - 1].y - self.nodes[self.elem[i].Ni - 1].y)**2)
             self.elem[i].cos = (self.nodes[self.elem[i].Nf - 1].x - self.nodes[self.elem[i].Ni - 1].x)/self.elem[i].L
             self.elem[i].sin = (self.nodes[self.elem[i].Nf - 1].y - self.nodes[self.elem[i].Ni - 1].y)/self.elem[i].L
             self.elem[i].setEVector(self.nodes[self.elem[i].Ni - 1], self.nodes[self.elem[i].Nf - 1])
+            
+            if (i == (k - 1)):
+                print("elemento danificado: %d, severidade do dano: %.2f" %(self.elem[i].id, damage))
+                self.elem[i].E = self.elem[i].E*(damage)
+            
             self.elem[i].setRotationMatrix()
             self.elem[i].setLocalStiffnessMatrix()
             
@@ -148,6 +153,9 @@ class Data():
             
             if (self.model == 'frame'):
                 self.elem[i].setFixedEndForceVector()
+                
+            if (i == (k - 1)):
+                self.elem[i].E = self.elem[i].E/damage
                 
     def setStructureMatrices(self):
         self.setStructureStiffnessMatrix()

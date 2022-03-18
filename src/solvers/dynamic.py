@@ -1,10 +1,15 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import math
+import os.path
+import sys
+import ast
 
 from scipy.linalg import eigh, eig
 from scipy.integrate import solve_ivp
 from numpy.core.fromnumeric import transpose
+
 
 class DynamicSolver():
     def __init__(self, data) -> None:
@@ -20,6 +25,7 @@ class DynamicSolver():
         self.q0 = []
         self.dq0 = []
         self.C = [] #proportional damping matrix
+        self.F = []
         self.zetas = [] #damping ratio
         self.r = [] #response
         
@@ -55,6 +61,28 @@ class DynamicSolver():
         self.C = a*self.data.M + b*self.data.K
         nom_C = np.dot(np.dot(transpose(self.phi), self.C), self.phi)
         self.zetas = np.diag((1/2)*np.dot(nom_C, np.linalg.inv(np.diag(self.omegas))))
+        
+    def setString(self):
+        s = "{"
+        for i in range(0, 10): #10 frequencias naturais
+            s += "'natural_frequency_" + str(i+1) + "':'" + str(self.w[i]) + '\','
+        for i in range(0, len(self.F)):
+            aux = self.F[:, i]
+            
+            if (i == len(self.F) - 1):
+                s += "'dof_" + str(i+1) + "':'" + str(max(abs(aux))) + '\''
+            else:
+                s += "'dof_" + str(i+1) + "':'" + str(max(abs(aux))) + '\','
+        s += "}"
+        
+        return s
+        
+    def calculateFlexibilityMatrix(self):
+        #self.F = np.dot(np.dot(self.phi, np.linalg.inv(np.diag(self.w))), transpose(self.phi))
+        
+        self.F = np.zeros((len(self.w), len(self.w)))
+        for i in range(10): #10 frequencias naturais
+            self.F += (1/self.w[i])*np.outer(self.phi[:,i], transpose(self.phi[:,i])) 
 
     def setInitialConditions(self):
         self.u0 = np.zeros(len(self.data.M))
@@ -87,12 +115,63 @@ class DynamicSolver():
     def solveEigenvalueProblem(self):
         self.w, self.v = eigh(self.data.K, self.data.M)
         
-    def solve(self):
+    def solve(self, k, damage):
         self.solveEigenvalueProblem()
         self.setNaturalFrequencies()
         self.setModalVectors()    
         self.setNormalizedModalMatrix()
-        self.setInitialConditions()
-        self.setDampingMatrix()
-        self.dynamicAnalysis()
-        self.plotResponse()
+        
+        # K_phi = np.dot(self.data.K, self.phi)
+        # M_phi = np.dot(np.dot(self.data.M, self.phi), np.diag(self.w))
+        # I = np.dot(np.dot(transpose(self.phi), self.data.M), self.phi)
+        #F = np.dot(np.dot(self.phi, np.linalg.inv(np.diag(self.w))), transpose(self.phi))
+        # K = np.dot(np.dot(np.dot(np.dot(self.data.M, self.phi), np.diag(self.w)), transpose(self.phi)), self.data.M)
+        
+        # F2 = np.zeros((len(self.w), len(self.w)))
+        # for i in range(len(self.w)):
+        #     F2 += (1/self.w[i])*np.outer(self.phi[:,i], transpose(self.phi[:,i]))  
+            
+        # sumMatrix = np.zeros((len(self.w), len(self.w)))
+        # for i in range(len(self.w)):
+        #     sumMatrix += (self.w[i])*np.outer(self.phi[:,i], transpose(self.phi[:,i]))
+        # K2 = np.dot(np.dot(self.data.M, sumMatrix), self.data.M)
+        
+        self.calculateFlexibilityMatrix()
+        
+        s = self.setString()
+        df = ast.literal_eval(s)
+        
+        if (k == 0):
+            df = pd.DataFrame(df, index=[0])
+            df.to_csv('bin\data\intact_strucutre.csv', index=False)
+        
+        else:
+            df_damaged = pd.DataFrame(df, index=[0]).apply(pd.to_numeric, errors='coerce')
+            df_intact = pd.read_csv('bin\data\intact_strucutre.csv')
+            df_result = df_intact - df_damaged
+            df_result['elem_damaged'] = self.data.elem[k-1].id
+            df_result['damage'] = 1 - damage
+
+            file_path = 'bin\data\\results_' + str(damage) + '.csv'
+            if (os.path.exists(file_path) and k > 1):
+                df = pd.read_csv('bin\data\\results_' + str(damage) + '.csv')
+                df = df.append(df_result)
+                df.to_csv('bin\data\\results_' + str(damage) + '.csv', index=False)
+            else:
+                df_result.to_csv('bin\data\\results_' + str(damage) + '.csv', index=False)
+            
+        # file_path = 'bin\data\saida2.csv'
+        # a = ""
+        # sys.stdout = open(file_path, "w")
+        # for i in range(len(self.F)):
+        #     for j in range(len(self.F[i])):
+        #             if (j == len(self.F[i]) - 1):
+        #                 a += str(self.F[i][j]) + '\n'
+        #             else:
+        #                 a += str(self.F[i][j]) + ','
+        # print(a)       
+
+        # self.setInitialConditions()
+        # self.setDampingMatrix()
+        # self.dynamicAnalysis()
+        # self.plotResponse()

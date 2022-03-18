@@ -1,10 +1,11 @@
 import sys
 
-L = 2.155
-elem_size = 0.0653
+L = 2.44
+n_elem = 32
+elem_size = L/n_elem
 n_nodes = int(L/elem_size)
 
-file_path = 'bin\data\cantilever_beam.txt'
+file_path = 'bin\data\dynamic\cantileverBeam.txt'
 sys.stdout = open(file_path, "w")
 
 print("#MODEL\nframe\n")
@@ -23,10 +24,10 @@ for i in range(n_nodes+1):
     print(aux)
 
 print('#ELEMENTS')
-A = 1.053e-3
-I = 1.302e-7
-p = 7850
-E = 207e9
+A = 0.00304
+I = 4.29e-5
+p = 7837.1
+E = 199.95e9
 for i in range(n_nodes):
     aux = str(i+1)+','+str(i+1)+','+str(i+2)+','+str(E)+','+str(A)+','+str(I)+','+str(p)+',local,0,0'
     print(aux)

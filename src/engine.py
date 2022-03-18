@@ -1,3 +1,5 @@
+import numpy as np
+
 from src.data import Data
 from src.solvers.static import StaticSolver
 from src.solvers.dynamic import DynamicSolver
@@ -13,15 +15,20 @@ class Engine():
     def start(self, filename):
         self.data.readModel(filename)
         self.data.setGlobalCoordinates()
-        self.data.setLocalBarVariables()
-        self.data.setStructureMatrices()
-        self.data.setGlobalForceVector()
         
-        if (self.data.analysisType != 'dynamic'):
-            self.solver = StaticSolver(self.data)
-            
-        else:
-            self.solver = DynamicSolver(self.data)
-            
-        self.solver.solve()        
+        damages = np.linspace(0.01, 0.99, 100)
+        
+        for j in range(0, len(damages)):
+            for i in range(0, len(self.data.elem) + 1):
+                self.data.setLocalBarVariables(i, damages[j])
+                self.data.setStructureMatrices()
+                self.data.setGlobalForceVector()
+                
+                if (self.data.analysisType != 'dynamic'):
+                    self.solver = StaticSolver(self.data)
+                    
+                else:
+                    self.solver = DynamicSolver(self.data)
+                
+                self.solver.solve(i, damages[j])        
         #self.output.printResults(self.data)

@@ -2,3 +2,7 @@ __pycache__
 ordem.txt
 output/
 readme.txt
+*.h5
+*.csv
+*.ipynb
+*/ipynb_checkpoints
