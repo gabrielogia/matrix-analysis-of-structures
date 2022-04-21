@@ -17,10 +17,15 @@ class Engine():
         self.data.setGlobalCoordinates()
         
         damages = np.linspace(0.01, 0.99, 100)
+        a = 10
         
         for j in range(0, len(damages)):
+            #damage = (a**damages[j] - 1)/(a - 1)
+            #damage = 1/(1 + (damages[j]/(damages[j] - 1))**-2)
+            #damage = 1/(1 + ((3*damages[j])/(damages[j] - 1))**-2)
+            damage = damages[j]
             for i in range(0, len(self.data.elem) + 1):
-                self.data.setLocalBarVariables(i, damages[j])
+                self.data.setLocalBarVariables(i, damage)
                 self.data.setStructureMatrices()
                 self.data.setGlobalForceVector()
                 
@@ -30,5 +35,5 @@ class Engine():
                 else:
                     self.solver = DynamicSolver(self.data)
                 
-                self.solver.solve(i, damages[j])        
+                self.solver.solve(i, damage)        
         #self.output.printResults(self.data)

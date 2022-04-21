@@ -142,7 +142,7 @@ class Data():
             self.elem[i].setEVector(self.nodes[self.elem[i].Ni - 1], self.nodes[self.elem[i].Nf - 1])
             
             if (i == (k - 1)):
-                print("elemento danificado: %d, severidade do dano: %.2f" %(self.elem[i].id, damage))
+                print("elemento danificado: %d, severidade do dano: %.6f" %(self.elem[i].id, damage))
                 self.elem[i].E = self.elem[i].E*(damage)
             
             self.elem[i].setRotationMatrix()

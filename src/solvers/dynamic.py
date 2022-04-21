@@ -124,7 +124,7 @@ class DynamicSolver():
         # K_phi = np.dot(self.data.K, self.phi)
         # M_phi = np.dot(np.dot(self.data.M, self.phi), np.diag(self.w))
         # I = np.dot(np.dot(transpose(self.phi), self.data.M), self.phi)
-        #F = np.dot(np.dot(self.phi, np.linalg.inv(np.diag(self.w))), transpose(self.phi))
+        # F = np.dot(np.dot(self.phi, np.linalg.inv(np.diag(self.w))), transpose(self.phi))
         # K = np.dot(np.dot(np.dot(np.dot(self.data.M, self.phi), np.diag(self.w)), transpose(self.phi)), self.data.M)
         
         # F2 = np.zeros((len(self.w), len(self.w)))

@@ -6,3 +6,5 @@ readme.txt
 *.csv
 *.ipynb
 *\.ipynb_checkpoints
+*.eps
+*.png

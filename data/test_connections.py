@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+plt.rcParams.update({'font.size': 18})
+
 nodes = pd.read_csv('bin\data\\test_nodes.csv')
 #print(nodes)
 
@@ -30,4 +32,6 @@ for i in range(len(elem_dict['xi'])):
     Y = [elem_dict['yi'][i], elem_dict['yf'][i]]
     plt.plot(X,Y, 'b.-')
     plt.grid(1)
+plt.xlabel("X [m]")
+plt.ylabel("Y [m]")
 plt.show()
