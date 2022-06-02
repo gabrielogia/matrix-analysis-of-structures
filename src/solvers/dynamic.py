@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import math
 import os.path
-import sys
 import ast
 
 from scipy.linalg import eigh, eig

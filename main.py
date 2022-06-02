@@ -1,5 +1,6 @@
 from src.engine import Engine
 
-filename = 'dynamic/building.txt'
-simulation = Engine()
-simulation.start(filename)
+if __name__ == '__main__':
+    filename = 'dynamic/building.txt'
+    simulation = Engine()
+    simulation.start(filename)

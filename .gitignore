@@ -8,3 +8,5 @@ readme.txt
 *\.ipynb_checkpoints
 *.eps
 *.png
+*.json
+*.pkl
