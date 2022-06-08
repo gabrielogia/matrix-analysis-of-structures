@@ -1,5 +1,5 @@
 from src.engine import Engine
 
-filename = 'dynamic/beam1.txt'
+filename = 'static/validated/frame1.txt'
 simulation = Engine()
 simulation.start(filename)  
