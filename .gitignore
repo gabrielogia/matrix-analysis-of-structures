@@ -4,8 +4,8 @@ output/
 readme.txt
 *.h5
 *.csv
-*.ipynb
 *\.ipynb_checkpoints
+*\models
 *.eps
 *.png
 *.json
