@@ -2,18 +2,24 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-df_und = pd.read_csv('bin\data\saida1.csv', header=None)
-df_d = pd.read_csv('bin\data\saida2.csv', header=None)
+plt.rcParams.update({'font.size': 36})
+plt.rcParams.update({"font.family": "Palatino Linotype"})
 
-df = abs((df_und - df_d)).max(numeric_only=True).values
+k = 10
 
-# aux = []
-# for i in range(0, len(df)):
-#     if (i%2==0):
-#         aux.append(df[i])
-        
-# print(df)
+damages = np.linspace(0.01, 0.99, 200)
+a = []
+b = []
+c = []
 
-plt.plot(df, '.-')
+for i in damages:
+    a.append((k**i - 1)/(k - 1))
+    b.append(1/(1 + (i/(i - 1))**-2))
+    c.append(i)
+
+plt.plot(a, 'b.-', lw=2)
+plt.plot(b, 'r.-', lw=2)
+plt.plot(c, 'k.-', lw=2)
 plt.grid(1)
+plt.legend(["$D_1(x)$", "$D_2(x)$", "$D_3(x)$"])
 plt.show()
